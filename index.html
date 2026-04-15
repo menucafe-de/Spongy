@@ -1,0 +1,2830 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SpongeBob Snack & Coffee - Menu</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --yellow: #ffe135;
+        --yellow-dark: #f5c518;
+        --blue: #00aeef;
+        --blue-dark: #0077b6;
+        --navy: #1b3a5c;
+        --cream: #fff8dc;
+        --card-bg: #fffbe6;
+        --shadow: rgba(0, 0, 0, 0.15);
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        background: var(--cream);
+        font-family: "Nunito", sans-serif;
+        overflow-x: hidden;
+      }
+
+      /* SPLASH */
+      #splash {
+        position: fixed;
+        inset: 0;
+        background: radial-gradient(
+          ellipse at center,
+          #00cfff 0%,
+          #0077b6 60%,
+          #004a8f 100%
+        );
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        transition:
+          opacity 0.8s ease,
+          transform 0.8s ease;
+      }
+      #splash.hide {
+        opacity: 0;
+        transform: scale(1.1);
+        pointer-events: none;
+      }
+      .splash-bubbles {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        pointer-events: none;
+      }
+      .bubble {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.15);
+        animation: floatBubble linear infinite;
+      }
+      @keyframes floatBubble {
+        0% {
+          transform: translateY(100vh) scale(0);
+          opacity: 0;
+        }
+        10% {
+          opacity: 1;
+        }
+        90% {
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(-10vh) scale(1);
+          opacity: 0;
+        }
+      }
+      .logo-wrap {
+        animation: logoBounce 0.8s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+        filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.4));
+      }
+      @keyframes logoBounce {
+        0% {
+          transform: scale(0) rotate(-10deg);
+          opacity: 0;
+        }
+        60% {
+          transform: scale(1.15) rotate(3deg);
+          opacity: 1;
+        }
+        80% {
+          transform: scale(0.95) rotate(-2deg);
+        }
+        100% {
+          transform: scale(1) rotate(0deg);
+          opacity: 1;
+        }
+      }
+      .logo-wrap img {
+        width: min(85vw, 380px);
+        animation: logoPulse 2s ease-in-out infinite 1s;
+      }
+      @keyframes logoPulse {
+        0%,
+        100% {
+          transform: scale(1);
+          filter: drop-shadow(0 0 20px rgba(255, 225, 53, 0.6));
+        }
+        50% {
+          transform: scale(1.06);
+          filter: drop-shadow(0 0 40px rgba(255, 225, 53, 1));
+        }
+      }
+      .splash-tagline {
+        font-family: "Fredoka One", cursive;
+        color: var(--yellow);
+        font-size: clamp(1.1rem, 4vw, 1.6rem);
+        text-shadow: 2px 2px 0 var(--navy);
+        margin-top: 1rem;
+        animation: fadeUp 0.6s ease 0.8s both;
+      }
+      .splash-loading {
+        margin-top: 2rem;
+        display: flex;
+        gap: 8px;
+        animation: fadeUp 0.6s ease 1.2s both;
+      }
+      .dot {
+        width: 12px;
+        height: 12px;
+        background: var(--yellow);
+        border-radius: 50%;
+        animation: dotBounce 0.8s ease-in-out infinite;
+      }
+      .dot:nth-child(2) {
+        animation-delay: 0.15s;
+      }
+      .dot:nth-child(3) {
+        animation-delay: 0.3s;
+      }
+      @keyframes dotBounce {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+      }
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* MENU */
+      #menu-page {
+        opacity: 0;
+        transform: translateY(30px);
+        transition:
+          opacity 0.8s ease,
+          transform 0.8s ease;
+      }
+      #menu-page.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .header {
+        background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+        padding: 1rem 1.5rem 1.5rem;
+        text-align: center;
+      }
+      .header-logo {
+        width: min(70vw, 200px);
+        filter: drop-shadow(0 4px 15px rgba(0, 0, 0, 0.3));
+        animation: bob 3s ease-in-out infinite;
+      }
+      @keyframes bob {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-6px);
+        }
+      }
+      .header-title {
+        font-family: "Fredoka One", cursive;
+        color: var(--yellow);
+        font-size: clamp(1.4rem, 5vw, 2.2rem);
+        text-shadow: 3px 3px 0 var(--navy);
+        margin-top: 0.3rem;
+      }
+      .header-sub {
+        color: rgba(255, 255, 255, 0.85);
+        font-size: 0.85rem;
+        font-weight: 600;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin-top: 0.2rem;
+      }
+
+      .wave {
+        display: block;
+        width: 100%;
+        line-height: 0;
+        margin-bottom: -1px;
+      }
+
+      .cat-nav {
+        background: var(--yellow);
+        padding: 0.8rem 1rem;
+        display: flex;
+        gap: 0.5rem;
+        overflow-x: auto;
+        scrollbar-width: none;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+      }
+      .cat-nav::-webkit-scrollbar {
+        display: none;
+      }
+      .cat-btn {
+        background: white;
+        border: 2px solid transparent;
+        border-radius: 50px;
+        padding: 0.45rem 1.1rem;
+        font-family: "Fredoka One", cursive;
+        font-size: 0.78rem;
+        color: var(--navy);
+        cursor: pointer;
+        white-space: nowrap;
+        transition: all 0.25s ease;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+      }
+      .cat-btn.active,
+      .cat-btn:hover {
+        background: var(--blue);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 174, 239, 0.4);
+      }
+
+      .menu-content {
+        padding: 1.5rem 1rem 3rem;
+        max-width: 900px;
+        margin: 0 auto;
+      }
+      .cat-section {
+        margin-bottom: 2.5rem;
+      }
+      .cat-header {
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        margin-bottom: 1.2rem;
+        padding: 0.8rem 1.2rem;
+        background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+        border-radius: 16px;
+        box-shadow: 0 4px 15px rgba(0, 119, 182, 0.3);
+      }
+      .cat-icon {
+        font-size: 1.8rem;
+      }
+      .cat-title {
+        font-family: "Fredoka One", cursive;
+        color: var(--yellow);
+        font-size: 1.4rem;
+        text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.3);
+      }
+      .sub-label {
+        font-family: "Fredoka One", cursive;
+        color: var(--navy);
+        font-size: 0.95rem;
+        margin: 1.2rem 0 0.8rem 0.3rem;
+        opacity: 0.7;
+      }
+
+      .products-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+        gap: 1rem;
+      }
+      @media (min-width: 600px) {
+        .products-grid {
+          grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+        }
+      }
+      @media (min-width: 900px) {
+        .products-grid {
+          grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        }
+      }
+
+      /* CARD */
+      .product-card {
+        background: var(--card-bg);
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px var(--shadow);
+        border: 2px solid rgba(255, 225, 53, 0.4);
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        cursor: pointer;
+      }
+      .product-card:hover {
+        transform: translateY(-6px) scale(1.02);
+        box-shadow: 0 12px 30px rgba(0, 174, 239, 0.3);
+        border-color: var(--blue);
+      }
+      .product-card.star {
+        border-color: var(--blue);
+      }
+
+      /* IMAGE AREA */
+      .product-img-wrap {
+        width: 100%;
+        aspect-ratio: 1;
+        position: relative;
+        overflow: hidden;
+        background: #deeef8;
+      }
+
+      /* ── REAL PRODUCT PHOTO ── */
+      .product-img-wrap img.prod-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: transform 0.4s ease;
+      }
+      .product-card:hover .prod-img {
+        transform: scale(1.08);
+      }
+
+      /* emoji fallback shown only when img fails */
+      .img-fallback {
+        display: none;
+        position: absolute;
+        inset: 0;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        background: linear-gradient(135deg, #e8f4fd, #b3e5fc);
+      }
+
+      /* SpongeBob logo stamp on every card image */
+      .logo-stamp {
+        position: absolute;
+        bottom: 6px;
+        right: 6px;
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 2px solid var(--yellow);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+        background: white;
+        z-index: 2;
+      }
+      .logo-stamp img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .product-info {
+        padding: 0.7rem 0.8rem 0.9rem;
+      }
+      .product-name {
+        font-family: "Fredoka One", cursive;
+        font-size: 0.88rem;
+        color: var(--navy);
+        line-height: 1.2;
+        margin-bottom: 0.3rem;
+      }
+      .product-desc {
+        font-size: 0.67rem;
+        color: #777;
+        line-height: 1.3;
+        font-style: italic;
+        margin-bottom: 0.5rem;
+      }
+      .product-price {
+        display: inline-block;
+        background: linear-gradient(135deg, var(--yellow), var(--yellow-dark));
+        color: var(--navy);
+        font-family: "Fredoka One", cursive;
+        font-size: 1rem;
+        padding: 0.2rem 0.7rem;
+        border-radius: 50px;
+        box-shadow: 0 2px 8px rgba(245, 197, 24, 0.4);
+      }
+
+      /* BOULE TABLE */
+      .boule-table {
+        background: var(--card-bg);
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px var(--shadow);
+        border: 2px solid rgba(255, 225, 53, 0.4);
+      }
+      .boule-table-header {
+        display: grid;
+        grid-template-columns: 1fr auto auto auto;
+        gap: 0.5rem;
+        background: var(--yellow-dark);
+        padding: 0.7rem 1rem;
+        font-family: "Fredoka One", cursive;
+        font-size: 0.85rem;
+        color: var(--navy);
+      }
+      .boule-row {
+        display: grid;
+        grid-template-columns: 1fr auto auto auto;
+        gap: 0.5rem;
+        padding: 0.6rem 1rem;
+        border-bottom: 1px solid rgba(255, 225, 53, 0.3);
+        align-items: center;
+        transition: background 0.2s;
+      }
+      .boule-row:hover {
+        background: rgba(255, 225, 53, 0.1);
+      }
+      .boule-row:last-child {
+        border-bottom: none;
+      }
+      .boule-name {
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: var(--navy);
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+      }
+      .boule-price {
+        font-family: "Fredoka One", cursive;
+        font-size: 0.78rem;
+        background: var(--yellow);
+        color: var(--navy);
+        padding: 0.15rem 0.5rem;
+        border-radius: 50px;
+        text-align: center;
+        min-width: 50px;
+      }
+
+      .footer {
+        background: var(--blue-dark);
+        color: white;
+        text-align: center;
+        padding: 1.5rem;
+        font-size: 0.8rem;
+      }
+      .footer-logo {
+        width: 80px;
+        margin-bottom: 0.5rem;
+        animation: bob 3s ease-in-out infinite;
+      }
+
+      .scroll-top {
+        position: fixed;
+        bottom: 1.5rem;
+        right: 1.5rem;
+        background: var(--blue);
+        color: white;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        box-shadow: 0 4px 15px rgba(0, 119, 182, 0.4);
+        z-index: 500;
+        transition: all 0.3s;
+        opacity: 0;
+        transform: scale(0);
+      }
+      .scroll-top.visible {
+        opacity: 1;
+        transform: scale(1);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- =====================================================================
+  📁 STRUCTURE DU PROJET — mets tout dans un dossier comme ça:
+  ┌── index.html
+  └── images/
+       ├── logo.png                        ← ton logo SpongeBob
+       ├── espresso.jpg
+       ├── americano.jpg
+       ├── capucin.jpg
+       ├── latte.jpg
+       ├── cappuccino.jpg
+       ├── vanilla_latte.jpg
+       ├── caramel_macchiato.jpg
+       ├── mocha_macchiato.jpg
+       ├── macchiato_noisette.jpg
+       ├── nutella_latte.jpg
+       ├── hot_chocolate.jpg
+       ├── nutella_hot_chocolate.jpg
+       ├── hot_speculoos.jpg
+       ├── iced_vanilla_americano.jpg
+       ├── iced_vanilla_latte.jpg
+       ├── iced_creamy_caramel.jpg
+       ├── iced_nutella_latte.jpg
+       ├── iced_creamy_lotus.jpg
+       ├── iced_chocolate.jpg
+       ├── iced_chocolate_banana.jpg
+       ├── frapp_coffee.jpg
+       ├── frapp_vanilla.jpg
+       ├── frapp_caramel.jpg
+       ├── frapp_speculoos.jpg
+       ├── frapp_nutella.jpg
+       ├── frapp_pistachio.jpg
+       ├── milkshake_chocolat.jpg
+       ├── milkshake_vanilla.jpg
+       ├── milkshake_strawberry.jpg
+       ├── milkshake_speculoos.jpg
+       ├── mojito_virgin.jpg
+       ├── mojito_blue.jpg
+       ├── mojito_red.jpg
+       ├── mojito_energy.jpg
+       ├── juice_strawberry.jpg
+       ├── juice_lemon_mint.jpg
+       ├── juice_energy.jpg
+       ├── double_strawberry_banana.jpg
+       ├── double_strawberry_framboise.jpg
+       ├── double_mango_peach.jpg
+       ├── double_mango_pineapple.jpg
+       ├── iced_tea_peach.jpg
+       ├── iced_tea_mango.jpg
+       ├── crepe_nutella.jpg
+       ├── crepe_nutella_fruits_secs.jpg
+       ├── crepe_kinder_bueno.jpg
+       ├── crepe_oreo.jpg
+       ├── crepe_morgene.jpg
+       ├── crepe_pistache.jpg
+       ├── crepe_speculoos.jpg
+       ├── crepe_spongy.jpg
+       ├── crepe_nutella_banane.jpg
+       ├── crepe_nutella_brownie.jpg
+       ├── crepe_kunefa.jpg
+       ├── gaufre_nutella.jpg
+       ├── gaufre_lotus.jpg
+       ├── gaufre_pistache.jpg
+       ├── gaufre_morgene.jpg
+       ├── gaufre_oreo.jpg
+       ├── gaufre_spongy.jpg
+       ├── croissant_nature.jpg
+       ├── croissant_pain.jpg
+       ├── croissant_double.jpg
+       ├── croissant_pistache.jpg
+       ├── croissant_amande_nutella.jpg
+       ├── tiramisu.jpg
+       ├── cheesecake.jpg
+       ├── jwajem.jpg
+       ├── yaourt_nature.jpg
+       ├── yaourt_nutella.jpg
+       ├── yaourt_speculoos.jpg
+       ├── yaourt_oreo.jpg
+       ├── yaourt_mangue.jpg
+       └── yaourt_pistache.jpg
+  ===================================================================== -->
+
+    <!-- SPLASH -->
+    <div id="splash">
+      <div class="splash-bubbles" id="splashBubbles"></div>
+      <div class="logo-wrap">
+        <img
+          src="images/logo.png"
+          alt="SpongeBob Snack & Coffee"
+          onerror="
+            this.style.display = 'none';
+            document.getElementById('fb-logo').style.display = 'block';
+          "
+        />
+        <div
+          id="fb-logo"
+          style="
+            display: none;
+            font-family: &quot;Fredoka One&quot;, cursive;
+            font-size: 3rem;
+            color: #ffe135;
+            text-shadow: 3px 3px 0 #1b3a5c;
+            text-align: center;
+          "
+        >
+          🧽<br />SpongeBob<br /><span style="font-size: 1.5rem"
+            >Snack & Coffee</span
+          >
+        </div>
+      </div>
+      <div class="splash-tagline">☕ Snack & Coffee ✨</div>
+      <div class="splash-loading">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+    </div>
+
+    <!-- MENU -->
+    <div id="menu-page">
+      <div class="header">
+        <img
+          src="images/logo.png"
+          class="header-logo"
+          alt="logo"
+          onerror="this.outerHTML = '<div style=\'font-size:2.5rem\'>🧽</div>'"
+        />
+        <div class="header-title">SpongeBob Snack & Coffee</div>
+        <div class="header-sub">✨ Notre Menu ✨</div>
+      </div>
+
+      <svg
+        class="wave"
+        viewBox="0 0 1200 60"
+        preserveAspectRatio="none"
+        style="background: #0077b6"
+      >
+        <path
+          d="M0,30 C200,60 400,0 600,30 C800,60 1000,0 1200,30 L1200,60 L0,60 Z"
+          fill="#FFF8DC"
+        />
+      </svg>
+
+      <div class="cat-nav">
+        <button class="cat-btn active" onclick="go('classic', this)">
+          ☕ Classiques
+        </button>
+        <button class="cat-btn" onclick="go('special', this)">
+          ⭐ Spéciaux
+        </button>
+        <button class="cat-btn" onclick="go('hot', this)">🔥 Chauds</button>
+        <button class="cat-btn" onclick="go('iced-coffee', this)">
+          🧊 Iced Coffee
+        </button>
+        <button class="cat-btn" onclick="go('iced-choco', this)">
+          🍫 Iced Choco
+        </button>
+        <button class="cat-btn" onclick="go('frapp', this)">
+          🥤 Frappuccinos
+        </button>
+        <button class="cat-btn" onclick="go('milkshake', this)">
+          🥛 Milkshakes
+        </button>
+        <button class="cat-btn" onclick="go('mojito', this)">🌿 Mojitos</button>
+        <button class="cat-btn" onclick="go('juice', this)">🍊 Jus</button>
+        <button class="cat-btn" onclick="go('icedtea', this)">
+          🍵 Iced Tea
+        </button>
+        <button class="cat-btn" onclick="go('crepe', this)">🥞 Crêpes</button>
+        <button class="cat-btn" onclick="go('gaufre', this)">🧇 Gaufres</button>
+        <button class="cat-btn" onclick="go('croissant', this)">
+          🥐 Croissants
+        </button>
+        <button class="cat-btn" onclick="go('boule', this)">
+          ⚽ Boule et Boule
+        </button>
+        <button class="cat-btn" onclick="go('dessert', this)">
+          🍰 Desserts
+        </button>
+        <button class="cat-btn" onclick="go('yaourt', this)">
+          🍦 Yaourt Glacé
+        </button>
+      </div>
+
+      <div class="menu-content">
+        <!-- MACRO to build a card: just copy-paste and change src / name / desc / price -->
+
+        <!-- ☕ CLASSIC COFFEES -->
+        <section class="cat-section" id="classic">
+          <div class="cat-header">
+            <span class="cat-icon">☕</span
+            ><span class="cat-title">Classic Coffeesyy</span>
+          </div>
+          <div class="products-grid">
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/juorange.png"
+                  alt="Espresso"
+                />
+                <div class="img-fallback" style="display: flex">☕</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Espresso</div>
+                <div class="product-desc">
+                  Le shot qui réveille même Patrick ! 💥
+                </div>
+                <div class="product-price">2.5 TND</div>
+              </div>
+            </div>
+
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/americano.jpg"
+                  alt="Americano"
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🫗</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Americano</div>
+                <div class="product-desc">
+                  Long & smooth, balade à Bikini Bottom 🌊
+                </div>
+                <div class="product-price">3.0 TND</div>
+              </div>
+            </div>
+
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/capucin.jpg"
+                  alt="Capucin"
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🫖</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Capucin</div>
+                <div class="product-desc">
+                  Mousse dorée, parfait pour les éponges gourmet ☁️
+                </div>
+                <div class="product-price">3.5 TND</div>
+              </div>
+            </div>
+
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/latte.jpg"
+                  alt="Latte"
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🥛</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Latte</div>
+                <div class="product-desc">Doux comme un câlin de Sandy 🤗</div>
+                <div class="product-price">3.8 TND</div>
+              </div>
+            </div>
+
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/cappuccino.jpg"
+                  alt="Cappuccino"
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">☕</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Cappuccino</div>
+                <div class="product-desc">
+                  La mousse parfaite, SpongeBob approuve ! ✅
+                </div>
+                <div class="product-price">4.0 TND</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ⭐ SPECIAL COFFEE -->
+        <section class="cat-section" id="special">
+          <div class="cat-header">
+            <span class="cat-icon">⭐</span
+            ><span class="cat-title">Special Coffee</span>
+          </div>
+          <div class="products-grid">
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/vanilla_latte.jpg"
+                  alt="Vanilla Latte"
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🌼</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Vanilla Latte</div>
+                <div class="product-desc">
+                  Vanillé & velouté, coucher de soleil sous-marin 🌅
+                </div>
+                <div class="product-price">6.0 TND</div>
+              </div>
+            </div>
+
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/caramel_macchiato.jpg"
+                  alt="Caramel Macchiato"
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🍮</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Caramel Macchiato</div>
+                <div class="product-desc">
+                  Doré comme SpongeBob lui-même ! 🌟
+                </div>
+                <div class="product-price">6.0 TND</div>
+              </div>
+            </div>
+
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/mocha_macchiato.jpg"
+                  alt="Mocha Macchiato"
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🍫</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Mocha Macchiato</div>
+                <div class="product-desc">
+                  Chocolat + café = combo de champion 🏆
+                </div>
+                <div class="product-price">6.0 TND</div>
+              </div>
+            </div>
+
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/macchiato_noisette.jpg"
+                  alt="Macchiato Noisette"
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🌰</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Macchiato Noisette</div>
+                <div class="product-desc">
+                  Noisette dorée, bisou pour tes papilles 😋
+                </div>
+                <div class="product-price">6.0 TND</div>
+              </div>
+            </div>
+
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/nutella_latte.jpg"
+                  alt="Nutella Latte"
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🍫</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Nutella Latte</div>
+                <div class="product-desc">
+                  Le latte que même Squidward commanderait 🦑
+                </div>
+                <div class="product-price">12.0 TND</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 🔥 HOT DRINKS -->
+        <section class="cat-section" id="hot">
+          <div class="cat-header">
+            <span class="cat-icon">🔥</span
+            ><span class="cat-title">Hot Drinks</span>
+          </div>
+          <div class="products-grid">
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/hot_chocolate.jpg"
+                  alt="Hot Chocolate"
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🍫</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Hot Chocolate</div>
+                <div class="product-desc">
+                  Chaud & onctueux, un hug en tasse ❤️
+                </div>
+                <div class="product-price">6.0 TND</div>
+              </div>
+            </div>
+
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/nutella_hot_chocolate.jpg"
+                  alt="Nutella Hot Chocolate"
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🍫</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Nutella Hot Choco</div>
+                <div class="product-desc">
+                  Choco + Nutella = bonheur au carré 😍
+                </div>
+                <div class="product-price">10.0 TND</div>
+              </div>
+            </div>
+
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/hot_speculoos.jpg"
+                  alt="Hot Speculoos"
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🍪</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Hot Speculoos</div>
+                <div class="product-desc">
+                  Épicé & caramélisé, Noël en tasse ✨
+                </div>
+                <div class="product-price">11.0 TND</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 🧊 ICED COFFEES -->
+        <section class="cat-section" id="iced-coffee">
+          <div class="cat-header">
+            <span class="cat-icon">🧊</span
+            ><span class="cat-title">Iced Coffees</span>
+          </div>
+          <div class="products-grid">
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/iced_vanilla_americano.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🥤</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Iced Vanilla Americano</div>
+                <div class="product-desc">
+                  Frais & vanillé, beach vibes activées 🏖️
+                </div>
+                <div class="product-price">6.0 TND</div>
+              </div>
+            </div>
+
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/iced_vanilla_latte.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🍦</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Iced Vanilla Latte</div>
+                <div class="product-desc">
+                  Velouté sur glace, frisson garanti ❄️
+                </div>
+                <div class="product-price">7.0 TND</div>
+              </div>
+            </div>
+
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/iced_creamy_caramel.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🍮</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Iced Creamy Caramel</div>
+                <div class="product-desc">Caramel coulant sur glace 😤🔥</div>
+                <div class="product-price">9.0 TND</div>
+              </div>
+            </div>
+
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/iced_nutella_latte.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🍫</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Iced Nutella Latte</div>
+                <div class="product-desc">
+                  Le latte qui fait tout oublier 🤯
+                </div>
+                <div class="product-price">10.0 TND</div>
+              </div>
+            </div>
+
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/iced_creamy_lotus.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🍪</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Iced Creamy Lotus</div>
+                <div class="product-desc">
+                  Speculoos glacé = bonheur absolu 🌺
+                </div>
+                <div class="product-price">11.0 TND</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 🍫 ICED CHOCO -->
+        <section class="cat-section" id="iced-choco">
+          <div class="cat-header">
+            <span class="cat-icon">🍫</span
+            ><span class="cat-title">Iced Choco</span>
+          </div>
+          <div class="products-grid">
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/iced_chocolate.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🧋</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Iced Chocolate</div>
+                <div class="product-desc">Choco + glace = été parfait ❄️🍫</div>
+                <div class="product-price">8.0 TND</div>
+              </div>
+            </div>
+
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/iced_chocolate_banana.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🍌</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Iced Choco Banana</div>
+                <div class="product-desc">
+                  Banana + choco = duo de super-héros 🦸
+                </div>
+                <div class="product-price">9.0 TND</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 🥤 FRAPPUCCINOS -->
+        <section class="cat-section" id="frapp">
+          <div class="cat-header">
+            <span class="cat-icon">🥤</span
+            ><span class="cat-title">Frappuccinos</span>
+          </div>
+          <div class="products-grid">
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/frapp_coffee.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">☕</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Coffee Frappuccino</div>
+                <div class="product-desc">
+                  Frappé classique et imbattable 💪
+                </div>
+                <div class="product-price">9.0 TND</div>
+              </div>
+            </div>
+
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/frapp_vanilla.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🌼</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Vanilla Frappuccino</div>
+                <div class="product-desc">Nuage de vanille en verre 🌸</div>
+                <div class="product-price">10.0 TND</div>
+              </div>
+            </div>
+
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/frapp_caramel.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🍮</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Caramel Crunchy</div>
+                <div class="product-desc">Croustillant + caramel = KO ! 💥</div>
+                <div class="product-price">11.0 TND</div>
+              </div>
+            </div>
+
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/frapp_speculoos.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🍪</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Speculoos Frappuccino</div>
+                <div class="product-desc">
+                  Biscuit épicé frappé, c'est magique ! ✨
+                </div>
+                <div class="product-price">12.0 TND</div>
+              </div>
+            </div>
+
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/frapp_nutella.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🍫</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Nutella Frappuccino</div>
+                <div class="product-desc">
+                  Nutella liquide + glace = paradis 🏝️
+                </div>
+                <div class="product-price">13.0 TND</div>
+              </div>
+            </div>
+
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/frapp_pistachio.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🌿</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Pistachio Frappuccino</div>
+                <div class="product-desc">
+                  Notre pépite verte, pistache royale 👑
+                </div>
+                <div class="product-price">15.0 TND</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 🥛 MILKSHAKES -->
+        <section class="cat-section" id="milkshake">
+          <div class="cat-header">
+            <span class="cat-icon">🥛</span
+            ><span class="cat-title">Milkshakes</span>
+          </div>
+          <div class="products-grid">
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/milkshake_chocolat.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🍫</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Milkshake Chocolat</div>
+                <div class="product-desc">
+                  Épais, crémeux & chocolaté à mort 🤤
+                </div>
+                <div class="product-price">9.0 TND</div>
+              </div>
+            </div>
+
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/milkshake_vanilla.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🍦</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Milkshake Vanilla</div>
+                <div class="product-desc">
+                  Doux comme un nuage de vanille ☁️
+                </div>
+                <div class="product-price">9.0 TND</div>
+              </div>
+            </div>
+
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/milkshake_strawberry.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🍓</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Milkshake Strawberry</div>
+                <div class="product-desc">
+                  Fraise fraîche, rose & irrésistible 🌸
+                </div>
+                <div class="product-price">10.0 TND</div>
+              </div>
+            </div>
+
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/milkshake_speculoos.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🍪</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Milkshake Speculoos</div>
+                <div class="product-desc">
+                  Lotus + lait = une poésie en verre 🎭
+                </div>
+                <div class="product-price">11.0 TND</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 🌿 MOJITOS -->
+        <section class="cat-section" id="mojito">
+          <div class="cat-header">
+            <span class="cat-icon">🌿</span
+            ><span class="cat-title">Mojitos</span>
+          </div>
+          <div class="products-grid">
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/mojito_virgin.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🍃</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Virgin Mojito</div>
+                <div class="product-desc">
+                  Menthe + citron = freshness level 100 😎
+                </div>
+                <div class="product-price">8.0 TND</div>
+              </div>
+            </div>
+
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/mojito_blue.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">💙</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Blue Mojito</div>
+                <div class="product-desc">
+                  Bleu comme l'océan de Bikini Bottom 🌊
+                </div>
+                <div class="product-price">8.5 TND</div>
+              </div>
+            </div>
+
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/mojito_red.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🌹</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Red Mojito</div>
+                <div class="product-desc">
+                  Rouge passion, beau comme un lever de soleil 🌅
+                </div>
+                <div class="product-price">10.0 TND</div>
+              </div>
+            </div>
+
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/mojito_energy.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">⚡</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Energy Mojito</div>
+                <div class="product-desc">
+                  Pour les aventuriers comme SpongeBob ! ⚡
+                </div>
+                <div class="product-price">12.0 TND</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 🍊 FRESH + DOUBLE JUICE -->
+        <section class="cat-section" id="juice">
+          <div class="cat-header">
+            <span class="cat-icon">🍊</span
+            ><span class="cat-title">Fresh Juice & Double Juice</span>
+          </div>
+          <div class="sub-label">🍓 Fresh Juice</div>
+          <div class="products-grid">
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/juice_strawberry.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🍓</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Fraise</div>
+                <div class="product-desc">
+                  100% fraise fraîche, vitamine boost 🌟
+                </div>
+                <div class="product-price">8.0 TND</div>
+              </div>
+            </div>
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/juice_lemon_mint.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🍋</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Lemon Mint</div>
+                <div class="product-desc">
+                  Citron + menthe = combo anti-stress 💚
+                </div>
+                <div class="product-price">8.0 TND</div>
+              </div>
+            </div>
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/juice_energy.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">⚡</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Energy Juice</div>
+                <div class="product-desc">
+                  Recharge les batteries comme SpongeBob 🔋
+                </div>
+                <div class="product-price">10.0 TND</div>
+              </div>
+            </div>
+          </div>
+          <div class="sub-label">🍹 Double Juice</div>
+          <div class="products-grid">
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/double_strawberry_banana.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🍌</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Strawberry Banana</div>
+                <div class="product-desc">
+                  Duo fruité qui fait chanter les papilles 🎶
+                </div>
+                <div class="product-price">10.0 TND</div>
+              </div>
+            </div>
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/double_strawberry_framboise.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🫐</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Strawberry Framboise</div>
+                <div class="product-desc">
+                  Rose & fruité, instagrammable à 100% 📸
+                </div>
+                <div class="product-price">9.5 TND</div>
+              </div>
+            </div>
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/double_mango_peach.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🥭</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Mango Peach</div>
+                <div class="product-desc">
+                  Tropical comme une île sous-marine 🏝️
+                </div>
+                <div class="product-price">9.0 TND</div>
+              </div>
+            </div>
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/double_mango_pineapple.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🍍</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Mango Pineapple</div>
+                <div class="product-desc">
+                  Ananas + mangue = vacances en verre 🌴
+                </div>
+                <div class="product-price">10.0 TND</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 🍵 ICED TEAS -->
+        <section class="cat-section" id="icedtea">
+          <div class="cat-header">
+            <span class="cat-icon">🍵</span
+            ><span class="cat-title">Iced Teas</span>
+          </div>
+          <div class="products-grid">
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/iced_tea_peach.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🍑</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Peach Iced Tea</div>
+                <div class="product-desc">
+                  Thé + pêche = l'été en gobelet 🌞
+                </div>
+                <div class="product-price">8.0 TND</div>
+              </div>
+            </div>
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/iced_tea_mango.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🥭</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Mango Iced Tea</div>
+                <div class="product-desc">
+                  Mangue dorée, frais comme la mer 🌊
+                </div>
+                <div class="product-price">9.0 TND</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 🥞 CRÊPES -->
+        <section class="cat-section" id="crepe">
+          <div class="cat-header">
+            <span class="cat-icon">🥞</span
+            ><span class="cat-title">Crêpes</span>
+          </div>
+          <div class="sub-label">🍝 Crêpes Spaghetti</div>
+          <div class="products-grid">
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/crepe_nutella.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🍫</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Crêpe Nutella</div>
+                <div class="product-desc">Le classique indétrônable 🏆</div>
+                <div class="product-price">8.0 TND</div>
+              </div>
+            </div>
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/crepe_nutella_fruits_secs.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🥜</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Nutella Fruits Secs</div>
+                <div class="product-desc">
+                  Craquant + fondant = texture parfaite ✨
+                </div>
+                <div class="product-price">11.0 TND</div>
+              </div>
+            </div>
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/crepe_kinder_bueno.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🍬</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Crêpe Kinder Bueno</div>
+                <div class="product-desc">
+                  Kinder + crêpe = enfance retrouvée 🎠
+                </div>
+                <div class="product-price">10.0 TND</div>
+              </div>
+            </div>
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/crepe_oreo.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🍪</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Crêpe Oreo</div>
+                <div class="product-desc">
+                  Oreo écrasé sur crêpe = art culinaire 🎨
+                </div>
+                <div class="product-price">8.0 TND</div>
+              </div>
+            </div>
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/crepe_morgene.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🌟</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Crêpe Morgene</div>
+                <div class="product-desc">
+                  Douce & caramélisée, le coup de cœur 💛
+                </div>
+                <div class="product-price">8.0 TND</div>
+              </div>
+            </div>
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/crepe_pistache.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🌿</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Crêpe Pistache</div>
+                <div class="product-desc">
+                  Pistache royale, le luxe en crêpe 👑
+                </div>
+                <div class="product-price">12.0 TND</div>
+              </div>
+            </div>
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/crepe_speculoos.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🍪</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Crêpe Spéculoos</div>
+                <div class="product-desc">
+                  Épicé + caramélisé, on dit merci ! 🙏
+                </div>
+                <div class="product-price">10.0 TND</div>
+              </div>
+            </div>
+            <div class="product-card star">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/crepe_spongy.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div
+                  class="img-fallback"
+                  style="
+                    display: flex;
+                    background: linear-gradient(135deg, #00aeef, #0077b6);
+                    color: white;
+                  "
+                >
+                  🧽
+                </div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Crêpe Spongy ⭐</div>
+                <div class="product-desc">
+                  Notre signature ! La crêpe ultime 🌊
+                </div>
+                <div class="product-price">15.0 TND</div>
+              </div>
+            </div>
+          </div>
+          <div class="sub-label">🥞 Crêpes Spéciales</div>
+          <div class="products-grid">
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/crepe_nutella_banane.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🍌</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Crêpe Nutella Banane</div>
+                <div class="product-desc">
+                  Nutella + banane = combo légendaire 🍌🤤
+                </div>
+                <div class="product-price">12.0 TND</div>
+              </div>
+            </div>
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/crepe_nutella_brownie.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🍫</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Crêpe Nutella Brownie</div>
+                <div class="product-desc">
+                  Brownie + Nutella = péché mignon au carré 😈
+                </div>
+                <div class="product-price">11.0 TND</div>
+              </div>
+            </div>
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/crepe_kunefa.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🧀</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Crêpe Kunefa</div>
+                <div class="product-desc">
+                  Orientale & fondante, la crêpe qui voyage ✈️
+                </div>
+                <div class="product-price">14.0 TND</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 🧇 GAUFRES -->
+        <section class="cat-section" id="gaufre">
+          <div class="cat-header">
+            <span class="cat-icon">🧇</span
+            ><span class="cat-title">Gaufres</span>
+          </div>
+          <div class="products-grid">
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/gaufre_nutella.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🍫</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Gaufre Nutella</div>
+                <div class="product-desc">
+                  Croustillante dehors, chocolatée dedans 🤤
+                </div>
+                <div class="product-price">5.0 TND</div>
+              </div>
+            </div>
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/gaufre_lotus.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🍪</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Gaufre Lotus</div>
+                <div class="product-desc">
+                  Speculoos coulant = addiction garantie 🌀
+                </div>
+                <div class="product-price">5.0 TND</div>
+              </div>
+            </div>
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/gaufre_pistache.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🌿</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Gaufre Pistache</div>
+                <div class="product-desc">
+                  Pistache luxe, gaufre de prestige 👑
+                </div>
+                <div class="product-price">9.0 TND</div>
+              </div>
+            </div>
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/gaufre_morgene.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🌟</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Gaufre Morgene</div>
+                <div class="product-desc">
+                  Caramel onctueux, gaufre du bonheur 💫
+                </div>
+                <div class="product-price">5.0 TND</div>
+              </div>
+            </div>
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/gaufre_oreo.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🍪</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Gaufre Oreo</div>
+                <div class="product-desc">
+                  Oreo fondant, irrésistible à chaque bouchée 🖤
+                </div>
+                <div class="product-price">6.0 TND</div>
+              </div>
+            </div>
+            <div class="product-card star">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/gaufre_spongy.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div
+                  class="img-fallback"
+                  style="
+                    display: flex;
+                    background: linear-gradient(135deg, #00aeef, #0077b6);
+                    color: white;
+                  "
+                >
+                  🧽
+                </div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Gaufre Spongy ⭐</div>
+                <div class="product-desc">
+                  La signature SpongeBob ! Unique & incroyable 🌊
+                </div>
+                <div class="product-price">8.0 TND</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 🥐 CROISSANTS -->
+        <section class="cat-section" id="croissant">
+          <div class="cat-header">
+            <span class="cat-icon">🥐</span
+            ><span class="cat-title">Croissants</span>
+          </div>
+          <div class="products-grid">
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/croissant_nature.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🥐</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Croissant Nature</div>
+                <div class="product-desc">
+                  Beurré & feuilleté, le classique indétrônable 🧈
+                </div>
+                <div class="product-price">1.4 TND</div>
+              </div>
+            </div>
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/croissant_pain.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🍞</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Croissant Pain</div>
+                <div class="product-desc">
+                  Tendre & doré, le petit-déj parfait 🌅
+                </div>
+                <div class="product-price">1.5 TND</div>
+              </div>
+            </div>
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/croissant_double.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🥐</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Croissant Double</div>
+                <div class="product-desc">
+                  Double croustillant, double satisfaction 💪
+                </div>
+                <div class="product-price">1.7 TND</div>
+              </div>
+            </div>
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/croissant_pistache.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🌿</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Croissant Pistache</div>
+                <div class="product-desc">
+                  Pistache fondante, croissant de rêve 💚
+                </div>
+                <div class="product-price">2.5 TND</div>
+              </div>
+            </div>
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/croissant_amande_nutella.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🍫</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Croissant Amande Nutella</div>
+                <div class="product-desc">
+                  Amande + Nutella = matin parfait ☀️
+                </div>
+                <div class="product-price">3.0 TND</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ⚽ BOULE ET BOULE -->
+        <section class="cat-section" id="boule">
+          <div class="cat-header">
+            <span class="cat-icon">⚽</span
+            ><span class="cat-title">Boule et Boule</span>
+          </div>
+          <div class="boule-table">
+            <div class="boule-table-header">
+              <div>🧁 Saveur</div>
+              <div>7 pcs</div>
+              <div>14 pcs</div>
+              <div>21 pcs</div>
+            </div>
+            <div class="boule-row">
+              <div class="boule-name">🍫 Nutella</div>
+              <div class="boule-price">5.0</div>
+              <div class="boule-price">9.0</div>
+              <div class="boule-price">13.0</div>
+            </div>
+            <div class="boule-row">
+              <div class="boule-name">🥜 Nutella Fruits Secs</div>
+              <div class="boule-price">7.5</div>
+              <div class="boule-price">11.5</div>
+              <div class="boule-price">15.5</div>
+            </div>
+            <div class="boule-row">
+              <div class="boule-name">🍬 Kinder Bueno</div>
+              <div class="boule-price">6.5</div>
+              <div class="boule-price">9.5</div>
+              <div class="boule-price">13.5</div>
+            </div>
+            <div class="boule-row">
+              <div class="boule-name">🍪 Oreo</div>
+              <div class="boule-price">7.0</div>
+              <div class="boule-price">9.0</div>
+              <div class="boule-price">13.0</div>
+            </div>
+            <div class="boule-row">
+              <div class="boule-name">🌿 Pistache</div>
+              <div class="boule-price">10.0</div>
+              <div class="boule-price">12.0</div>
+              <div class="boule-price">16.0</div>
+            </div>
+            <div class="boule-row">
+              <div class="boule-name">🍪 Spéculoos</div>
+              <div class="boule-price">7.0</div>
+              <div class="boule-price">10.0</div>
+              <div class="boule-price">13.0</div>
+            </div>
+            <div class="boule-row">
+              <div class="boule-name">✨ Dubai</div>
+              <div class="boule-price">10.0</div>
+              <div class="boule-price">15.0</div>
+              <div class="boule-price">20.0</div>
+            </div>
+            <div class="boule-row" style="background: rgba(0, 174, 239, 0.06)">
+              <div class="boule-name">🧽 Spongy ⭐</div>
+              <div class="boule-price">10.0</div>
+              <div class="boule-price">16.0</div>
+              <div class="boule-price">21.0</div>
+            </div>
+            <div
+              style="
+                padding: 0.5rem 1rem;
+                font-size: 0.72rem;
+                color: #888;
+                font-style: italic;
+                text-align: center;
+              "
+            >
+              Prix en TND 🇹🇳
+            </div>
+          </div>
+        </section>
+
+        <!-- 🍰 DESSERTS -->
+        <section class="cat-section" id="dessert">
+          <div class="cat-header">
+            <span class="cat-icon">🍰</span
+            ><span class="cat-title">Desserts</span>
+          </div>
+          <div class="products-grid">
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/tiramisu.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">☕</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Tiramisu</div>
+                <div class="product-desc">
+                  L'italien qui fait rêver, mascarpone & café 😍
+                </div>
+                <div class="product-price">6.5 TND</div>
+              </div>
+            </div>
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/cheesecake.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🍰</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Cheesecake</div>
+                <div class="product-desc">
+                  Onctueux & fruité, le dessert star 🌟
+                </div>
+                <div class="product-price">6.5 TND</div>
+              </div>
+            </div>
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/jwajem.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🥜</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Jwajem</div>
+                <div class="product-desc">
+                  Notre trésor tunisien, noix & miel 🇹🇳
+                </div>
+                <div class="product-price">15.0 TND</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 🍦 YAOURT GLACÉ -->
+        <section class="cat-section" id="yaourt">
+          <div class="cat-header">
+            <span class="cat-icon">🍦</span
+            ><span class="cat-title">Yaourt Glacé</span>
+          </div>
+          <div class="products-grid">
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/yaourt_nature.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🍦</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Nature</div>
+                <div class="product-desc">
+                  Frais & léger, la légèreté absolue 🌬️
+                </div>
+                <div class="product-price">5.5 TND</div>
+              </div>
+            </div>
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/yaourt_nutella.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🍫</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Nutella</div>
+                <div class="product-desc">
+                  Nutella + yaourt glacé = combo parfait 🥇
+                </div>
+                <div class="product-price">6.0 TND</div>
+              </div>
+            </div>
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/yaourt_speculoos.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🍪</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Spéculoos</div>
+                <div class="product-desc">
+                  Lotus + fraîcheur = la vie est belle 💛
+                </div>
+                <div class="product-price">6.0 TND</div>
+              </div>
+            </div>
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/yaourt_oreo.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🍪</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Oreo</div>
+                <div class="product-desc">
+                  Oreo écrasé + glacé = craquant au max 💥
+                </div>
+                <div class="product-price">7.0 TND</div>
+              </div>
+            </div>
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/yaourt_mangue.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🥭</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Mangue</div>
+                <div class="product-desc">
+                  Tropical & fruité, mango lover must try 🌴
+                </div>
+                <div class="product-price">7.5 TND</div>
+              </div>
+            </div>
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img
+                  class="prod-img"
+                  src="images/yaourt_pistache.jpg"
+                  alt=""
+                  onerror="
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                  "
+                />
+                <div class="img-fallback" style="display: flex">🌿</div>
+                <div class="logo-stamp">
+                  <img src="images/logo.png" onerror="this.outerHTML = '🧽'" />
+                </div>
+              </div>
+              <div class="product-info">
+                <div class="product-name">Pistache</div>
+                <div class="product-desc">
+                  Pistache luxueuse + glacé = excellence 🌟
+                </div>
+                <div class="product-price">8.0 TND</div>
+              </div>
+            </div>
+          </div>
+          <div
+            style="
+              margin-top: 1rem;
+              text-align: center;
+              font-family: &quot;Fredoka One&quot;, cursive;
+              color: var(--navy);
+              background: rgba(255, 225, 53, 0.3);
+              padding: 0.7rem;
+              border-radius: 12px;
+              font-size: 0.9rem;
+            "
+          >
+            🥜 Supplément Fruit Sec : +2.0 TND
+          </div>
+        </section>
+      </div>
+      <!-- /menu-content -->
+
+      <div class="footer">
+        <img
+          src="images/logo.png"
+          class="footer-logo"
+          alt="logo"
+          onerror="this.outerHTML = '<div style=\'font-size:2rem\'>🧽</div>'"
+        />
+        <div
+          style="
+            font-family: &quot;Fredoka One&quot;, cursive;
+            font-size: 1rem;
+            color: var(--yellow);
+            margin-bottom: 0.3rem;
+          "
+        >
+          SpongeBob Snack & Coffee
+        </div>
+        <div style="opacity: 0.7; font-size: 0.78rem">
+          🌊 Are you ready, kids? ⭐
+        </div>
+      </div>
+    </div>
+    <!-- /menu-page -->
+
+    <button
+      class="scroll-top"
+      id="scrollTop"
+      onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
+    >
+      ↑
+    </button>
+
+    <script>
+      // Splash bubbles
+      const sb = document.getElementById("splashBubbles");
+      for (let i = 0; i < 20; i++) {
+        const b = document.createElement("div");
+        b.className = "bubble";
+        const s = 10 + Math.random() * 40;
+        b.style.cssText = `width:${s}px;height:${s}px;left:${Math.random() * 100}%;animation-duration:${3 + Math.random() * 5}s;animation-delay:${Math.random() * 5}s`;
+        sb.appendChild(b);
+      }
+
+      // Splash → Menu after 3.2s
+      setTimeout(() => {
+        const sp = document.getElementById("splash"),
+          mp = document.getElementById("menu-page");
+        sp.classList.add("hide");
+        setTimeout(() => {
+          sp.style.display = "none";
+          mp.classList.add("show");
+        }, 800);
+      }, 3200);
+
+      // Category nav scroll
+      function go(id, btn) {
+        const el = document.getElementById(id);
+        if (el)
+          window.scrollTo({
+            top: el.getBoundingClientRect().top + window.pageYOffset - 70,
+            behavior: "smooth",
+          });
+        document
+          .querySelectorAll(".cat-btn")
+          .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+      }
+
+      // Scroll-to-top button
+      window.addEventListener("scroll", () =>
+        document
+          .getElementById("scrollTop")
+          .classList.toggle("visible", window.scrollY > 300),
+      );
+
+      // Animate cards on scroll
+      const obs = new IntersectionObserver(
+        (entries) =>
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              e.target.style.opacity = "1";
+              e.target.style.transform = "translateY(0)";
+            }
+          }),
+        { threshold: 0.1 },
+      );
+      document.querySelectorAll(".product-card").forEach((c, i) => {
+        c.style.cssText += `;opacity:0;transform:translateY(20px);transition:opacity .4s ease ${(i % 6) * 0.07}s,transform .4s ease ${(i % 6) * 0.07}s,box-shadow .3s,border-color .3s`;
+        obs.observe(c);
+      });
+    </script>
+  </body>
+</html>
