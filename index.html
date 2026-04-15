@@ -335,6 +335,34 @@
         background: #deeef8;
       }
 
+      .edit-image-btn {
+        position: absolute;
+        top: 0.65rem;
+        right: 0.65rem;
+        width: 34px;
+        height: 34px;
+        border: none;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.9);
+        color: var(--navy);
+        font-size: 1rem;
+        cursor: pointer;
+        display: grid;
+        place-items: center;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
+        opacity: 0;
+        transition:
+          opacity 0.2s ease,
+          transform 0.2s ease;
+        z-index: 4;
+      }
+
+      .product-img-wrap:hover .edit-image-btn,
+      .product-img-wrap:focus-within .edit-image-btn {
+        opacity: 1;
+        transform: translateY(-1px);
+      }
+
       /* ── REAL PRODUCT PHOTO ── */
       .product-img-wrap img.prod-img {
         width: 100%;
@@ -693,7 +721,7 @@
               <div class="product-img-wrap">
                 <img
                   class="prod-img"
-                  src="images/juorange.png"
+                  src="images/yaourtglacenutella.png"
                   alt="Espresso"
                 />
                 <div class="img-fallback" style="display: flex">☕</div>
@@ -2518,7 +2546,7 @@
               <div class="product-img-wrap">
                 <img
                   class="prod-img"
-                  src="images/cheesecake.jpg"
+                  src="images/cheesenutella.png"
                   alt=""
                   onerror="
                     this.style.display = 'none';
@@ -2767,6 +2795,13 @@
       ↑
     </button>
 
+    <input
+      type="file"
+      id="imageFilePicker"
+      accept="image/*"
+      style="display: none"
+    />
+
     <script>
       // Splash bubbles
       const sb = document.getElementById("splashBubbles");
@@ -2824,6 +2859,96 @@
       document.querySelectorAll(".product-card").forEach((c, i) => {
         c.style.cssText += `;opacity:0;transform:translateY(20px);transition:opacity .4s ease ${(i % 6) * 0.07}s,transform .4s ease ${(i % 6) * 0.07}s,box-shadow .3s,border-color .3s`;
         obs.observe(c);
+      });
+
+      const imageFilePicker = document.getElementById("imageFilePicker");
+      let currentEditableImage = null;
+
+      function updateProductImage(img, newSrc) {
+        const fallback = img.nextElementSibling;
+        if (fallback && fallback.classList.contains("img-fallback")) {
+          fallback.style.display = "none";
+        }
+        img.style.display = "";
+        img.src = newSrc;
+      }
+
+      function handleImageLoad(event) {
+        const img = event.target;
+        img.style.display = "";
+        const fallback = img.nextElementSibling;
+        if (fallback && fallback.classList.contains("img-fallback")) {
+          fallback.style.display = "none";
+        }
+      }
+
+      function handleImageError(event) {
+        const img = event.target;
+        img.style.display = "none";
+        const fallback = img.nextElementSibling;
+        if (fallback && fallback.classList.contains("img-fallback")) {
+          fallback.style.display = "flex";
+        }
+      }
+
+      function promptImageUpdate(img) {
+        const response = prompt(
+          "Entrez une nouvelle URL d'image ou tapez LOCAL pour choisir un fichier depuis votre appareil :",
+        );
+        if (response === null) return;
+
+        const value = response.trim();
+        if (value.toUpperCase() === "LOCAL" || value === "") {
+          currentEditableImage = img;
+          imageFilePicker.value = "";
+          imageFilePicker.click();
+          return;
+        }
+
+        updateProductImage(img, value);
+      }
+
+      document.querySelectorAll(".product-img-wrap").forEach((wrap) => {
+        const img = wrap.querySelector(".prod-img");
+        if (!img) return;
+
+        const fallback = wrap.querySelector(".img-fallback");
+        if (fallback) {
+          fallback.style.display = "none";
+        }
+
+        img.addEventListener("load", handleImageLoad);
+        img.addEventListener("error", handleImageError);
+
+        if (img.complete) {
+          if (img.naturalWidth === 0) {
+            handleImageError({ target: img });
+          } else {
+            handleImageLoad({ target: img });
+          }
+        }
+
+        const editButton = document.createElement("button");
+        editButton.type = "button";
+        editButton.className = "edit-image-btn";
+        editButton.title = "Modifier l'image du produit";
+        editButton.textContent = "✎";
+        editButton.addEventListener("click", () => promptImageUpdate(img));
+        wrap.appendChild(editButton);
+      });
+
+      imageFilePicker.addEventListener("change", (event) => {
+        const file = event.target.files && event.target.files[0];
+        if (!file || !currentEditableImage) return;
+
+        const reader = new FileReader();
+        reader.onload = () => {
+          if (typeof reader.result === "string") {
+            updateProductImage(currentEditableImage, reader.result);
+          }
+          currentEditableImage = null;
+        };
+        reader.readAsDataURL(file);
       });
     </script>
   </body>
